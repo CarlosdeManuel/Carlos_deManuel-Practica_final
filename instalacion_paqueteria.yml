@@ -1,0 +1,31 @@
+---
+- name: "Instalacion paqueteria"
+  hosts: prod, dev, test
+  vars:
+    paquetes:
+      - vim
+      - name
+      - net-tools
+
+
+  tasks:
+    - name: "Actualizar nodos prod"
+      yum:
+        name: '*'
+        state: latest
+      when: "prod" in group_names
+      # group_names es una variable mágica
+
+    - name: "Instalar Development tools en nodos dev"
+      yum:
+        name: "@Development tools"
+        state: present
+      when: "dev" in group_names
+
+    - name: "Instalar paquetes en nodos test"
+      yum:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ paquetes }}"
+      when: "test" in group_names
+...
